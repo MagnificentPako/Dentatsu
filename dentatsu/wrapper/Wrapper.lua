@@ -1,6 +1,8 @@
 local class = require "lib.30log"
 local ProcessorChain = require "processor.ProcessorChain"
 
+local Packet = require "packet.Packet"
+
 local Wrapper = class "Wrapper"
 
 local function dcopy(t)
@@ -24,6 +26,10 @@ end
 
 function Wrapper:addHandler(func)
   table.insert(self._handlers, func)
+end
+
+function Wrapper:send(packet)
+  table.insert(self._packetQueue, packet)
 end
 
 function Wrapper:run()
@@ -74,7 +80,15 @@ function Wrapper:run()
         if(#self._receiveQueue > 0) then
           for k,v in pairs(self._receiveQueue) do
             for i,j in pairs(self._handlers) do
-              j(v)
+              j(v, function(content)
+                self:send(
+                  Packet(
+                    content,
+                    v:getSource(),
+                    v:getTarget()
+                  )
+                )
+              end)
             end
           end
           self._receiveQueue = {}

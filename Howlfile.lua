@@ -17,3 +17,11 @@ Tasks:require "main" {
 }
 
 Tasks:Task "build" { "clean", "minify" } :Description "Main build task"
+
+Tasks:gist "upload" (function(spec)
+	spec:summary "A simple communication abstraction for CC"
+	spec:gist "83a2601b7873abdb8acd0124ff2279bd"
+	spec:from "build" {
+		include = { "Dentatsu.lua", "Dentatsu.min.lua" }
+	}
+end) :Requires { "build/Dentatsu.lua", "build/Dentatsu.min.lua" }

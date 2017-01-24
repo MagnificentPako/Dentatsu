@@ -3,7 +3,7 @@ local Target = class "Target"
 
 function Target:init(channel, isSelf)
   self._channel = channel
-  self._isSelf = isSelf
+  self._isSelf = isSelf and isSelf or false
 end
 
 function Target:getTarget()
